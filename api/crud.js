@@ -33,7 +33,7 @@ exports.getTask = () => new Promise(async (resolve, reject) => {
 exports.putTask = (data) => new Promise(async (resolve, reject) => {
     try {
         const client = await pool.connect();
-        if (data.username && data.email && data.password) {
+        if (data.username && data.email && data.password && !find(client,data.email).rows[0].email) {
             const result = await client.query(
                 `insert into user_data (username,email,password)
          values('${data.username}','${data.email}','${data.password}');
@@ -41,12 +41,20 @@ exports.putTask = (data) => new Promise(async (resolve, reject) => {
             );
         } else throw ('Wrong data')
         resolve('Success')
+        async function find(client,email){
+            let A = await client.query(`select user_data.email
+            from user_data
+            where '${email}' = user_data.email
+            `)
 
+            return A
+        }
     }
     catch (err) {
         reject(err)
     }
 });
+
 exports.updateTask = (data) => new Promise(async (resolve, reject) => {
     try {
         const client = await pool.connect();
@@ -54,7 +62,6 @@ exports.updateTask = (data) => new Promise(async (resolve, reject) => {
         from user_data
         where user_data.email = '${data.email}'
         `);
-        console.log(to_update.rows[0].email)
         if (to_update) {
             const result = await client.query(
                 `UPDATE user_data
@@ -72,7 +79,7 @@ exports.updateTask = (data) => new Promise(async (resolve, reject) => {
 }
 );
 exports.deleteTask = (id) => new Promise(async (resolve, reject) => {
-    try {console.log(id)
+    try {
         const client = await pool.connect();
         const to_delete = await client.query(`select user_data.id
         from user_data

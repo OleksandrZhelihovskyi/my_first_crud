@@ -10,20 +10,17 @@ router.get('/api/tasks', async (ctx, next) => {
         ctx.body = result;
     }
     catch (err) {
-        console.log('err', err)
-        ctx.status = 500
-        ctx.body = err
+        await next(err);
     }
-});
+})
+
 router.put('/api/user-data', async (ctx, next) => {
     try {
         const result = await Task.putTask(ctx.request.body);
         ctx.body = result;
     }
     catch (err) {
-        console.log('err', err)
-        ctx.status = 204
-        ctx.body = err
+        await next(err);
     }
 });
 
@@ -33,9 +30,7 @@ router.patch('/api/user-data', async (ctx, next) => {
         ctx.body = result;
     }
     catch (err) {
-        console.log('err', err)
-        ctx.status = 500
-        ctx.body = err
+        await next(err);
     }
 });
 router.del(`/api/user-data/:id`, async (ctx, next) => {
@@ -44,9 +39,12 @@ router.del(`/api/user-data/:id`, async (ctx, next) => {
         ctx.body = result;
     }
     catch (err) {
-        console.log('err', err)
-        ctx.status = 204
-        ctx.body = err
+        await next(err);
     }
 });
+router.use((ctx,err)=>{
+    console.log('err', err)
+        ctx.status = 500
+        ctx.body = err
+})
 module.exports = router;
