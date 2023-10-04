@@ -44,7 +44,7 @@ router.del(`/api/user-data/:id`, async (ctx, next) => {
 });
 router.use((ctx,err)=>{
     console.log('err', err)
-        ctx.status = 500
+        ctx.status = 500// fixed to 500
         ctx.body = err
 })
 module.exports = router;
