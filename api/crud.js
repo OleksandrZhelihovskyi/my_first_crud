@@ -71,18 +71,18 @@ exports.updateTask = (data) => new Promise(async (resolve, reject) => {
     }
 }
 );
-exports.deleteTask = (data) => new Promise(async (resolve, reject) => {
-    try {
+exports.deleteTask = (id) => new Promise(async (resolve, reject) => {
+    try {console.log(id)
         const client = await pool.connect();
-        const to_delete = await client.query(`select user_data.email
+        const to_delete = await client.query(`select user_data.id
         from user_data
-        where user_data.email = '${data.email}'
+        where user_data.id = '${id}'
         `);
-
+        
         if (to_delete) {
             const result = await client.query(
                 `DELETE FROM user_data
-                WHERE user_data.email = '${to_delete.rows[0].email}'
+                WHERE user_data.id = '${to_delete.rows[0].id}'
                  `
             );
         } else throw ('Wrong data')
