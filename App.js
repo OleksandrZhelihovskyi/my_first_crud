@@ -9,4 +9,4 @@ app.use(cors());
 app.use(koaBody());
 app.use(router.routes())
 app.use(router.allowedMethods())
-app.listen(2000, () => { console.log('http:localhost:2000') });
+app.listen(2000, () => { console.log('http://localhost:2000') });
