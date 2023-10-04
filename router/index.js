@@ -34,7 +34,7 @@ router.patch('/api/user-data', async (ctx, next) => {
     }
 });
 router.del(`/api/user-data/:id`, async (ctx, next) => {
-    try {console.log(ctx.params.id)
+    try {
         const result = await Task.deleteTask(ctx.params.id);
         ctx.body = result;
     }
@@ -42,9 +42,9 @@ router.del(`/api/user-data/:id`, async (ctx, next) => {
         await next(err);
     }
 });
-router.use((ctx,err)=>{
+router.use((ctx, err) => {
     console.log('err', err)
-        ctx.status = 500// fixed to 500
-        ctx.body = err
+    ctx.status = 500// fixed to 500
+    ctx.body = err
 })
 module.exports = router;

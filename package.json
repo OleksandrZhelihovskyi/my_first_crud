@@ -4,7 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon app.js"
+    "start:dev": "nodemon app.js",
+    "migrate:up": "node-pg-migrate up",
+    "migrate:down": "node-pg-migrate down",
+    "migrate:redo": "node-pg-migrate redo",
+    "migrate:create": "node-pg-migrate create"
+    
   },
   "keywords": [],
   "author": "",
@@ -16,6 +21,7 @@
     "koa-body": "^6.0.1",
     "koa-json": "^2.0.2",
     "koa-router": "^12.0.0",
+    "node-pg-migrate": "^6.2.2",
     "pg": "^8.11.3"
   }
 }

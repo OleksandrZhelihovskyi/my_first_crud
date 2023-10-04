@@ -10,7 +10,7 @@ const pool = new Pool(
     }
 );
 
-exports.getTask = () => new Promise(async (resolve, reject) => {
+exports.getTask = async () => {
     try {
         const client = await pool.connect();
         const result = await client.query(
@@ -21,41 +21,37 @@ exports.getTask = () => new Promise(async (resolve, reject) => {
         join priority on user_data.id = priority.user_id
         join category on user_data.id = category.user_id; `
         );
-        resolve(result)
+        return result
 
     }
     catch (err) {
-        reject(err)
+        return err
     }
-}
-
-);
-exports.putTask = (data) => new Promise(async (resolve, reject) => {
+};
+exports.putTask = async (data) => {
     try {
+
         const client = await pool.connect();
-        if (data.username && data.email && data.password && !find(client,data.email).rows[0].email) {
+        let res = await client.query(`select user_data.email
+             from user_data
+             where '${data.email}' = user_data.email
+             `)
+        if (data.username && data.email && data.password && !res.rows[0]) {
+
             const result = await client.query(
                 `insert into user_data (username,email,password)
          values('${data.username}','${data.email}','${data.password}');
         `
             );
         } else throw ('Wrong data')
-        resolve('Success')
-        async function find(client,email){
-            let A = await client.query(`select user_data.email
-            from user_data
-            where '${email}' = user_data.email
-            `)
-
-            return A
-        }
+        return 'Success'
     }
     catch (err) {
-        reject(err)
+        return err
     }
-});
+};
 
-exports.updateTask = (data) => new Promise(async (resolve, reject) => {
+exports.updateTask = async (data) => {
     try {
         const client = await pool.connect();
         const to_update = await client.query(`select user_data.email
@@ -70,22 +66,21 @@ exports.updateTask = (data) => new Promise(async (resolve, reject) => {
                  `
             );
         } else throw ('Wrong data')
-        resolve('Success')
+        return ('Success')
 
     }
     catch (err) {
-        reject(err)
+        return err
     }
-}
-);
-exports.deleteTask = (id) => new Promise(async (resolve, reject) => {
+};
+exports.deleteTask = async (id) => {
     try {
         const client = await pool.connect();
         const to_delete = await client.query(`select user_data.id
         from user_data
         where user_data.id = '${id}'
         `);
-        
+
         if (to_delete) {
             const result = await client.query(
                 `DELETE FROM user_data
@@ -93,11 +88,10 @@ exports.deleteTask = (id) => new Promise(async (resolve, reject) => {
                  `
             );
         } else throw ('Wrong data')
-        resolve('Success')
+        return 'Success'
 
     }
     catch (err) {
-        reject(err)
+        return err
     }
-}
-);
+};
