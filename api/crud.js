@@ -1,5 +1,4 @@
 const { Pool } = require('pg');
-const cfg = require('../db/config.json')
 const conf = require('dotenv').config()
 const pool = new Pool(conf.parsed);
 

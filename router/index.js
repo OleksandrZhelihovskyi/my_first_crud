@@ -48,7 +48,7 @@ router.use((ctx, err) => {
     ctx.body = err
     
 })
-process.on("uncaughtException", function (err) {
+process.on("uncaughtException", function () {
     process.exit(); 
 });
 module.exports = router;
