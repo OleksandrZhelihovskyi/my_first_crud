@@ -1,15 +1,7 @@
 const { Pool } = require('pg');
 const cfg = require('../db/config.json')
-const pool = new Pool(
-    {
-        user: cfg.user,
-        host: cfg.host,
-        database: cfg.database,
-        password: cfg.password,
-        port: cfg.port
-    },
-
-);
+const conf = require('dotenv').config()
+const pool = new Pool(conf.parsed);
 
 exports.getTask = async () => {
     try {
