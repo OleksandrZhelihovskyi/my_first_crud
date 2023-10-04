@@ -21,6 +21,7 @@ exports.getTask = async () => {
         join priority on user_data.id = priority.user_id
         join category on user_data.id = category.user_id; `
         );
+        client.release()
         return result
 
     }
@@ -43,7 +44,11 @@ exports.putTask = async (data) => {
          values('${data.username}','${data.email}','${data.password}');
         `
             );
-        } else throw ('Wrong data')
+        } else {
+            client.release()
+            throw ('Wrong data')
+        }
+        client.release()
         return 'Success'
     }
     catch (err) {
@@ -65,7 +70,11 @@ exports.updateTask = async (data) => {
                 WHERE email = '${to_update.rows[0].email}';
                  `
             );
-        } else throw ('Wrong data')
+        } else {
+            client.release()
+            throw ('Wrong data')
+        }
+        client.release()
         return ('Success')
 
     }
@@ -87,7 +96,11 @@ exports.deleteTask = async (id) => {
                 WHERE user_data.id = '${to_delete.rows[0].id}'
                  `
             );
-        } else throw ('Wrong data')
+        } else {
+            client.release()
+            throw ('Wrong data')
+        }
+        client.release()
         return 'Success'
 
     }
