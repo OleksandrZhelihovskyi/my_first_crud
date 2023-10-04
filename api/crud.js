@@ -7,7 +7,8 @@ const pool = new Pool(
         database: cfg.database,
         password: cfg.password,
         port: cfg.port
-    }
+    },
+
 );
 
 exports.getTask = async () => {
@@ -26,24 +27,22 @@ exports.getTask = async () => {
 
     }
     catch (err) {
+        client.release()
         return err
+
     }
 };
 exports.putTask = async (data) => {
     try {
-
         const client = await pool.connect();
-        let res = await client.query(`select user_data.email
-             from user_data
-             where '${data.email}' = user_data.email
-             `)
+        const text = 'SELECT user_data.email FROM user_data WHERE user_data.email = $1'
+        const values = data.email
+        const res = await client.query(text, [values])
         if (data.username && data.email && data.password && !res.rows[0]) {
+            const query = 'INSERT INTO user_data (username,email,password) VALUES($1::text,$2::text,$3::text)'
+            const values = [data.username, data.email, data.password]
 
-            const result = await client.query(
-                `insert into user_data (username,email,password)
-         values('${data.username}','${data.email}','${data.password}');
-        `
-            );
+            const result = await client.query(query, values);
         } else {
             client.release()
             throw ('Wrong data')
@@ -58,25 +57,23 @@ exports.putTask = async (data) => {
 
 exports.updateTask = async (data) => {
     try {
+        const values = data.email
         const client = await pool.connect();
-        const to_update = await client.query(`select user_data.email
-        from user_data
-        where user_data.email = '${data.email}'
-        `);
-        if (to_update) {
-            const result = await client.query(
-                `UPDATE user_data
-                SET username = '${data.username}', email = '${data.email}', password = '${data.password}'
-                WHERE email = '${to_update.rows[0].email}';
-                 `
+        const to_update = await client.query('select user_data.email from user_data where user_data.email = $1',
+            [values]);
+
+        if (to_update.rows[0]) {
+            console.log(to_update.rows[0])
+            const result = await client.query('UPDATE user_data SET username = $1::text, email = $2::text, password = $3::text WHERE email = $4::text',
+                [data.username, data.email, data.password, to_update.rows[0].email]
             );
+            console.log(result)
         } else {
             client.release()
             throw ('Wrong data')
         }
         client.release()
         return ('Success')
-
     }
     catch (err) {
         return err
@@ -85,16 +82,9 @@ exports.updateTask = async (data) => {
 exports.deleteTask = async (id) => {
     try {
         const client = await pool.connect();
-        const to_delete = await client.query(`select user_data.id
-        from user_data
-        where user_data.id = '${id}'
-        `);
-
-        if (to_delete) {
-            const result = await client.query(
-                `DELETE FROM user_data
-                WHERE user_data.id = '${to_delete.rows[0].id}'
-                 `
+        const to_delete = await client.query('select user_data.id from user_data where user_data.id = $1', [id]);
+        if (to_delete.rows[0]) {
+            const result = await client.query('DELETE FROM user_data WHERE user_data.id = $1', [id]
             );
         } else {
             client.release()

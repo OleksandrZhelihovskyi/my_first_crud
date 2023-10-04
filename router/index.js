@@ -46,5 +46,9 @@ router.use((ctx, err) => {
     console.log('err', err)
     ctx.status = 500// fixed to 500
     ctx.body = err
+    
 })
+process.on("uncaughtException", function (err) {
+    process.exit(); 
+});
 module.exports = router;
