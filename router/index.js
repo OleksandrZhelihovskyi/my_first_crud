@@ -6,7 +6,7 @@ const Task = require('../api/crud');
 
 router.get('/api/tasks', async (ctx, next) => {
     try {
-        const result = await Task.getTask();
+        const result = await Task.getTask(ctx.request.query);
         ctx.body = result;
     }
     catch (err) {

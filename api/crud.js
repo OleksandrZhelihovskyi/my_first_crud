@@ -2,7 +2,7 @@ const { Pool } = require('pg');
 const conf = require('dotenv').config()
 const pool = new Pool(conf.parsed);
 
-exports.getTask = async () => {
+exports.getTask = async (data) => {
     try {
         const client = await pool.connect();
         const result = await client.query(
