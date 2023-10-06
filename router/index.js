@@ -4,21 +4,21 @@ const Task = require('../api/crud');
 
 
 
-router.get('/api/user-data', async (ctx, next) => {
+router.get('/api/user-data', async (ctx) => {
         const result = await Task.getTask(ctx.request.query);
         ctx.body = result;
 })
 
-router.put('/api/user-data', async (ctx, next) => {
+router.put('/api/user-data', async (ctx) => {
         const result = await Task.putTask(ctx.request.body);
         ctx.body = result;
 });
 
-router.patch('/api/user-data', async (ctx, next) => {
+router.patch('/api/user-data', async (ctx) => {
         const result = await Task.updateTask(ctx.request.body);
         ctx.body = result;
 });
-router.del(`/api/user-data/:id`, async (ctx, next) => {
+router.del(`/api/user-data/:id`, async (ctx) => {
         const result = await Task.deleteTask(ctx.params.id);
         ctx.body = result;
 });
